@@ -1,5 +1,6 @@
 package com.minigame.controller;
 
+import com.minigame.entity.User; // 确保导入User实体类
 import com.minigame.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class UserController {
         return res;
     }
 
-    // 登录接口（优化参数缺失提示）
+    // 登录接口（核心修改：返回userId）
     @PostMapping("/login")
     public Map<String, Object> login(@RequestParam(required = false) String username, @RequestParam(required = false) String password) {
         Map<String, Object> res = new HashMap<>();
@@ -45,10 +46,14 @@ public class UserController {
                 res.put("msg", "参数缺失：用户名或密码不能为空");
                 return res;
             }
-            if (userService.login(username, password)) {
+
+            // 调整：通过用户名密码查询用户实体（而非仅返回boolean）
+            User user = userService.getUserByUsernameAndPassword(username, password);
+            if (user != null) {
                 res.put("code", 200);
                 res.put("msg", "登录成功");
                 res.put("username", username);
+                res.put("userId", user.getId()); // 核心：返回用户ID
             } else {
                 res.put("code", 500);
                 res.put("msg", "账号或密码错误");

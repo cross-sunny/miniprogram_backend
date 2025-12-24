@@ -5,6 +5,12 @@
         SELECT id, username, password, create_time AS createTime FROM user WHERE username = #{username}
     </select>
 
+    <!-- 在UserMapper.xml中新增 -->
+    <select id="selectByUsernameAndPassword" parameterType="map" resultType="com.minigame.entity.User">
+        SELECT id, username, password FROM user
+        WHERE username = #{username} AND password = #{password}
+    </select>
+
     <insert id="insert" parameterType="com.minigame.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (username, password, create_time) VALUES (#{username}, #{password}, #{createTime})
     </insert>

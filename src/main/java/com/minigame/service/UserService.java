@@ -34,7 +34,7 @@ public class UserService {
         }
     }
 
-    // 登录功能（明文对比密码）
+    // 原有登录功能（明文对比密码，保留不变）
     public boolean login(String username, String password) {
         try {
             // 1. 查询用户
@@ -47,6 +47,22 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    // 新增核心方法：根据用户名+密码查询用户实体（供登录接口返回userId）
+    public User getUserByUsernameAndPassword(String username, String password) {
+        try {
+            // 1. 先根据用户名查询用户
+            User user = userMapper.selectByUsername(username);
+            // 2. 密码匹配则返回用户实体，否则返回null
+            if (user != null && password.equals(user.getPassword())) {
+                return user;
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

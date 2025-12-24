@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.minigame.mapper.TodoMapper">
+
+    <!-- 新增任务 -->
+    <insert id="insertTodo" parameterType="com.minigame.entity.Todo">
+        INSERT INTO todo (user_id, content, deadline, is_done, create_time)
+        VALUES (#{userId}, #{content}, #{deadline}, 0, NOW())
+    </insert>
+
+    <!-- 根据用户ID查任务列表 -->
+    <select id="selectByUserId" parameterType="Integer" resultType="com.minigame.entity.Todo">
+        SELECT
+            id,
+            user_id AS userId,
+            content,
+            deadline,
+            is_done AS isDone,
+            create_time AS createTime
+        FROM todo
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 更新任务完成状态 -->
+    <update id="updateIsDone" parameterType="com.minigame.entity.Todo">
+        UPDATE todo
+        SET is_done = #{isDone}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除任务 -->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM todo
+        WHERE id = #{id}
+    </delete>
+</mapper>
